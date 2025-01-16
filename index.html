@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart PDF Management</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #4b5563;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      width: 100%;
+      background-color: #2980b9;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar h1 {
+      font-size: 1.5rem;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 15px;
+    }
+
+    .navbar ul li {
+      display: inline;
+    }
+
+    .navbar ul li a {
+      text-decoration: none;
+      color: white;
+      font-size: 1rem;
+      transition: color 0.3s;
+    }
+
+    .navbar ul li a:hover {
+      color: #ecf0f1;
+    }
+
+    .container {
+      width: 75%;
+      max-width: 70vw;
+      text-align: center;
+      margin-top: 20px;
+      margin-left: 20vw;
+    }
+
+    .upload-area {
+      border: 2px dashed #ece8e8;
+      border-radius: 8px;
+      padding: 40px;
+      background-color: #48586e;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .upload-area:hover {
+      background-color: #ecf0f1;
+    }
+
+    .upload-area p {
+      font-size: 1.2rem;
+      color: #46a3e0;
+    }
+
+    .upload-area input {
+      display: none;
+    }
+
+    .search-bar {
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      max-width: 600px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .search-bar button {
+      padding: 10px 20px;
+      background-color: #2980b9;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .search-bar button:hover {
+      background-color: #1f618d;
+    }
+
+    .pdf-list {
+      margin-top: 20px;
+      display: flex;
+      /* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+      gap: 20px;
+    }
+
+    .pdf-item {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .pdf-item span {
+      font-size: 1rem;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .pdf-item button {
+      padding: 10px 20px;
+      background-color: #2980b9;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .pdf-item button:hover {
+      background-color: #1f618d;
+    }
+
+    .bot-icon {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      
+      /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
+      
+    }
+
+    .bot-icon img:hover {
+      transform: scale(1.1);
+    }
+
+    .AI-btn{
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background-color: #2980b9;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      
+    }
+
+    .bot-icon img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    @media (max-width: 768px) {
+      .upload-area {
+        padding: 20px;
+      }
+
+      .search-bar {
+        flex-direction: column;
+      }
+
+      .search-bar input {
+        margin-bottom: 10px;
+      }
+    }
+
+    .chatbot-container {
+      width: 360px;
+      height: 450px;
+      background-color: #fff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .chat-body {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background-color: #f9f9f9;
+    }
+
+    .message {
+      margin-bottom: 15px;
+      padding: 10px 15px;
+      border-radius: 20px;
+      max-width: 70%;
+    }
+
+    .bot-message {
+      background-color: #e0e0e0;
+      align-self: flex-start;
+    }
+
+    .user-message {
+      background-color: #4CAF50;
+      color: white;
+      align-self: flex-end;
+    }
+
+    .chat-footer {
+      display: flex;
+      padding: 10px;
+      background-color: #f4f4f9;
+      border-top: 1px solid #ddd;
+    }
+
+    #chat-input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+
+    #send-btn {
+      margin-left: 10px;
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .hidden{
+      display: none;
+    }
+
+    .visible{
+      display: block;
+    }
+
+    #send-btn:hover {
+      background-color: #45a049;
+    }
+
+    .sidebar {
+      width: 20vw;
+      height: 100vh;
+      background-color: #1e293b;
+      color: #ffffff;
+      position: fixed;
+      top: 45px;
+      left: 0;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+      overflow-y: auto;
+    }
+
+    .sidebar h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #4b5563;
+      padding-bottom: 10px;
+    }
+
+    .pdf1-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .pdf1-item {
+      background-color: #334155;
+      padding: 10px 15px;
+      border-radius: 5px;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .pdf1-item:hover {
+      background-color: #475569;
+    }
+
+    .pdf1-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .pdf1-details span {
+      color: #ffffff;
+      font-size: 16px;
+      word-break: break-word;
+    }
+
+    .upload-date {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 5px;
+    }
+
+    .view-btn {
+      background-color: #0ea5e9;
+      color: #ffffff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .view-btn:hover {
+      background-color: #0284c7;
+    }
+
+    /* Scrollbar Styles */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #64748b;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .pdf2-box {
+      width: 300px;
+      height: 200px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .pdf2-preview {
+      height: 400px;
+      width: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .pdf2-actions {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .action-btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+    }
+
+    .action-btn.delete {
+      background-color: black;
+      border-radius: 20px;
+    }
+
+    .action-btn:hover {
+      opacity: 0.9;
+    }
+  </style>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+</head>
+<body>
+  <nav class="navbar">
+    <h1>Smart PDF Management</h1>
+    <ul>
+      <li><a href="#upload">LogOut</a></li>
+    </ul>
+  </nav>
+
+  <div class="sidebar">
+    <h2 style="text-align: center; align-items: center;">Past History</h2>
+    <div class="pdf1-list">
+      <div class="pdf1-item">
+        <div class="pdf1-details">
+          <span>Document1.pdf</span>
+          <button class="view-btn">View</button>
+        </div>
+        <div class="upload-date">Uploaded on: 2025-01-10</div>
+      </div>
+      <div class="pdf1-item">
+        <div class="pdf1-details">
+          <span>ProjectReport.pdf</span>
+          <button class="view-btn">View</button>
+        </div>
+        <div class="upload-date">Uploaded on: 2025-01-12</div>
+      </div>
+      <div class="pdf1-item">
+        <div class="pdf1-details">
+          <span>Resume.pdf</span>
+          <button class="view-btn">View</button>
+        </div>
+        <div class="upload-date">Uploaded on: 2025-01-14</div>
+      </div>
+      <div class="pdf1-item">
+        <div class="pdf1-details">
+          <span>Resume.pdf</span>
+          <button class="view-btn">View</button>
+        </div>
+        <div class="upload-date">Uploaded on: 2025-01-14</div>
+      </div><div class="pdf1-item">
+        <div class="pdf1-details">
+          <span>Resume.pdf</span>
+          <button class="view-btn">View</button>
+        </div>
+        <div class="upload-date">Uploaded on: 2025-01-14</div>
+      </div><div class="pdf1-item">
+        <div class="pdf1-details">
+          <span>Resume.pdf</span>
+          <button class="view-btn">View</button>
+        </div>
+        <div class="upload-date">Uploaded on: 2025-01-14</div>
+      </div><div class="pdf1-item">
+        <div class="pdf1-details">
+          <span>Resume.pdf</span>
+          <button class="view-btn">View</button>
+        </div>
+        <div class="upload-date">Uploaded on: 2025-01-14</div>
+      </div><div class="pdf1-item">
+        <div class="pdf1-details">
+          <span>Resume.pdf</span>
+          <button class="view-btn">View</button>
+        </div>
+        <div class="upload-date">Uploaded on: 2025-01-14</div>
+      </div><div class="pdf1-item">
+        <div class="pdf1-details">
+          <span>Resume.pdf</span>
+          <button class="view-btn">View</button>
+        </div>
+        <div class="upload-date">Uploaded on: 2025-01-14</div>
+      </div><div class="pdf1-item">
+        <div class="pdf1-details">
+          <span>Resume.pdf</span>
+          <button class="view-btn">View</button>
+        </div>
+        <div class="upload-date">Uploaded on: 2025-01-14</div>
+      </div>
+      <!-- Add more pdf1 items below -->
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="upload" class="upload-area" onclick="document.getElementById('pdfUpload').click()">
+      <p>Drag and drop your PDF here</p>
+      <input type="file" id="pdfUpload" accept="application/pdf">
+    </div>
+
+    <div id="search" class="search-bar">
+      <input type="text" placeholder="Search PDFs...">
+      <button>Search</button>
+    </div> 
+
+    <div id="library" class="pdf-list">
+      <div class="pdf2-box">
+        <!-- pdf2 Preview -->
+        <embed src="PartialDifferentiation.pdf" type="application/pdf" style="background-color: #2980b9; color: blue; " class="pdf2-preview" />
+      
+        <!-- Actions -->
+        <div class="pdf2-actions">
+          <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+      <div class="pdf2-box">
+        <!-- pdf2 Preview -->
+        <embed src="PartialDifferentiation.pdf" type="application/pdf" class="pdf2-preview" />
+      
+        <!-- Actions -->
+        <div class="pdf2-actions">
+          <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+      <div class="pdf2-box">
+        <!-- pdf2 Preview -->
+        <embed src="PartialDifferentiation.pdf" type="application/pdf" class="pdf2-preview" />
+      
+        <!-- Actions -->
+        <div class="pdf2-actions">
+          <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+      <div class="pdf2-box">
+        <!-- pdf2 Preview -->
+        <embed src="PartialDifferentiation.pdf" type="application/pdf" class="pdf2-preview" />
+      
+        <!-- Actions -->
+        <div class="pdf2-actions">
+          <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="pdf2-box">
+        <!-- pdf2 Preview -->
+        <embed src="PartialDifferentiation.pdf" type="application/pdf" class="pdf2-preview" />
+      
+        <!-- Actions -->
+        <div class="pdf2-actions">
+          <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="pdf2-box">
+        <!-- pdf2 Preview -->
+        <embed src="PartialDifferentiation.pdf" type="application/pdf" class="pdf2-preview" />
+      
+        <!-- Actions -->
+        <div class="pdf2-actions">
+          <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+      <div class="pdf2-box">
+        <!-- pdf2 Preview -->
+        <embed src="PartialDifferentiation.pdf" type="application/pdf" class="pdf2-preview" />
+      
+        <!-- Actions -->
+        <div class="pdf2-actions">
+          <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="pdf2-box">
+        <!-- pdf2 Preview -->
+        <embed src="PartialDifferentiation.pdf" type="application/pdf" class="pdf2-preview" />
+      
+        <!-- Actions -->
+        <div class="pdf2-actions">
+          <!-- <a href="PartialDifferentiation.pdf" class="action-btn download" download>Download</a> -->
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="pdf2-box">
+        <!-- pdf2 Preview -->
+        <embed src="PartialDifferentiation.pdf" type="application/pdf" class="pdf2-preview" />
+      
+        <!-- Actions -->
+        <div class="pdf2-actions">
+          <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="bot-icon">
+    <div id="AIBtn"><img src="ai_icon.jpg" alt="AI Bot"></div>
+
+    <div class="chatbot-container hidden" id="chatbot-temp">
+      <div class="chat-header" style="display: flex; justify-content: end;">
+        <h3 style="width: 60%; align-items: end; text-align: end;">Chatbot</h3>
+        <button style="width: 40%; align-items: end; text-align: end; background: none; border: none;" id="cancel-bot"><img style="height : 30px ;width: 30px;" src="cross2.jpg" alt="cancel-btn"></button>
+      </div>
+      <div class="chat-body" id="chat-body">
+        <div class="message bot-message">
+          Hello! How can I help you today?
+        </div>
+      </div>
+      <div class="chat-footer">
+        <input type="text" id="chat-input" placeholder="Type a message..." />
+        <button id="send-btn">Send</button>
+      </div>
+    </div>
+    
+  </div>
+
+
+  <script>
+    document.getElementById('send-btn').addEventListener('click', () => {
+      const chatBody = document.getElementById('chat-body');
+      const chatInput = document.getElementById('chat-input');
+      const userMessage = chatInput.value.trim();
+
+      if (userMessage) {
+        // Add user message to chat
+        const userMessageElement = document.createElement('div');
+        userMessageElement.classList.add('message', 'user-message');
+        userMessageElement.textContent = userMessage;
+        chatBody.appendChild(userMessageElement);
+
+        // Add bot reply
+        const botMessageElement = document.createElement('div');
+        botMessageElement.classList.add('message', 'bot-message');
+        botMessageElement.textContent = "I'm just a simple bot. :)";
+        chatBody.appendChild(botMessageElement);
+
+        // Clear input
+        chatInput.value = '';
+
+        // Scroll to the bottom
+        chatBody.scrollTop = chatBody.scrollHeight;
+      }
+    });
+
+    document.getElementById('cancel-bot').addEventListener('click', () => {
+      const chatBody = document.getElementById('chatbot-temp');
+      const aiBtn = document.getElementById('AIBtn');
+      chatBody.classList.add('hidden');
+      aiBtn.classList.remove('hidden');
+    });
+
+    document.getElementById('AIBtn').addEventListener('click', () => {
+      const chatBody = document.getElementById('chatbot-temp');
+      const aiBtn = document.getElementById('AIBtn');
+      aiBtn.classList.add('hidden');
+      chatBody.classList.remove('hidden');
+    });
+
+
+  </script>
+</body>
+</html>
