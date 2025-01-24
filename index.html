@@ -13,7 +13,7 @@
     }
 
     body {
-      background-color: #4b5563;
+      background-color: #f4f6f7;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -69,10 +69,10 @@
     }
 
     .upload-area {
-      border: 2px dashed #ece8e8;
+      border: 2px dashed rgb(66, 66, 232);
       border-radius: 8px;
       padding: 40px;
-      background-color: #48586e;
+      background-color: white;
       cursor: pointer;
       transition: background-color 0.3s;
     }
@@ -92,6 +92,7 @@
 
     .search-bar {
       margin: 20px 0;
+      margin-bottom: 50px;
       display: flex;
       justify-content: center;
       gap: 10px;
@@ -125,7 +126,7 @@
       /* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
       flex-wrap: wrap;
       justify-content: space-evenly;
-      gap: 20px;
+      gap: 30px 15px;
     }
 
     .pdf-item {
@@ -221,7 +222,7 @@
     }
 
     .chat-header {
-      background-color: #4CAF50;
+      background-color: rgb(84, 84, 231);
       color: white;
       padding: 15px;
       text-align: center;
@@ -272,7 +273,7 @@
     #send-btn {
       margin-left: 10px;
       padding: 10px 15px;
-      background-color: #4CAF50;
+      background-color: rgb(84, 84, 231);
       color: white;
       border: none;
       border-radius: 20px;
@@ -289,7 +290,7 @@
     }
 
     #send-btn:hover {
-      background-color: #45a049;
+      background-color: rgb(60, 60, 243);
     }
 
     .sidebar {
@@ -298,7 +299,7 @@
       background-color: #1e293b;
       color: #ffffff;
       position: fixed;
-      top: 45px;
+      top: 55px;
       left: 0;
       padding: 20px;
       box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
@@ -377,13 +378,14 @@
     }
 
     .pdf2-box {
-      width: 300px;
-      height: 200px;
-      border: 1px solid #ccc;
+      width: 330px;
+      height: 175px;
+      border: 2px solid #bcbcbc;
       border-radius: 8px;
       overflow: hidden;
       background: #fff;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      
       position: relative;
     }
 
@@ -391,6 +393,7 @@
       height: 400px;
       width: 100%;
       object-fit: cover;
+      
       display: block;
     }
 
@@ -403,7 +406,7 @@
     }
 
     .action-btn {
-      padding: 8px 12px;
+      padding: 10px 12px;
       border: none;
       border-radius: 4px;
       cursor: pointer;
@@ -414,12 +417,21 @@
     }
 
     .action-btn.delete {
-      background-color: black;
+      background-color: rgb(97, 97, 119);
+      /* background: ; */
       border-radius: 20px;
     }
 
     .action-btn:hover {
       opacity: 0.9;
+    }
+
+    .logOut-btn{
+      border: 1px solid rgb(84, 84, 231);
+      border-radius: 10px;
+      background-color: #026ea4;
+      padding: 10px 20px;
+      margin: 2px;
     }
   </style>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -429,7 +441,9 @@
   <nav class="navbar">
     <h1>Smart PDF Management</h1>
     <ul>
-      <li><a href="#upload">LogOut</a></li>
+      <li class="logOut-btn"><a href="#upload">Home</a></li>
+      <li class="logOut-btn"><a href="#upload">AI Summarise</a></li>
+      <li class="logOut-btn"><a href="#upload">LogOut</a></li>
     </ul>
   </nav>
 
@@ -518,44 +532,13 @@
     <div id="library" class="pdf-list">
       <div class="pdf2-box">
         <!-- pdf2 Preview -->
-        <embed src="PartialDifferentiation.pdf" type="application/pdf" style="background-color: #2980b9; color: blue; " class="pdf2-preview" />
+        <embed src="PartialDifferentiation.pdf#toolbar=0" type="application/pdf" style="background-color: #2980b9; color: blue; " class="pdf2-preview" />
       
         <!-- Actions -->
         <div class="pdf2-actions">
           <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
-          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
-          </button>
-        </div>
-      </div>
-      <div class="pdf2-box">
-        <!-- pdf2 Preview -->
-        <embed src="PartialDifferentiation.pdf" type="application/pdf" class="pdf2-preview" />
-      
-        <!-- Actions -->
-        <div class="pdf2-actions">
-          <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
-          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
-          </button>
-        </div>
-      </div>
-      <div class="pdf2-box">
-        <!-- pdf2 Preview -->
-        <embed src="PartialDifferentiation.pdf" type="application/pdf" class="pdf2-preview" />
-      
-        <!-- Actions -->
-        <div class="pdf2-actions">
-          <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
-          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
-          </button>
-        </div>
-      </div>
-      <div class="pdf2-box">
-        <!-- pdf2 Preview -->
-        <embed src="PartialDifferentiation.pdf" type="application/pdf" class="pdf2-preview" />
-      
-        <!-- Actions -->
-        <div class="pdf2-actions">
-          <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-download"></i></button>
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-print"></i></button>
           <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
           </button>
         </div>
@@ -563,11 +546,13 @@
 
       <div class="pdf2-box">
         <!-- pdf2 Preview -->
-        <embed src="PartialDifferentiation.pdf" type="application/pdf" class="pdf2-preview" />
+        <embed src="t1.pdf#toolbar=0" type="application/pdf" style="background-color: #2980b9; color: blue; " class="pdf2-preview" />
       
         <!-- Actions -->
         <div class="pdf2-actions">
           <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-download"></i></button>
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-print"></i></button>
           <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
           </button>
         </div>
@@ -575,22 +560,14 @@
 
       <div class="pdf2-box">
         <!-- pdf2 Preview -->
-        <embed src="PartialDifferentiation.pdf" type="application/pdf" class="pdf2-preview" />
+        <embed src="t2.pdf#toolbar=0" type="application/pdf" style="background-color: #2980b9; color: blue; " class="pdf2-preview" />
       
         <!-- Actions -->
         <div class="pdf2-actions">
           <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
-          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
-          </button>
-        </div>
-      </div>
-      <div class="pdf2-box">
-        <!-- pdf2 Preview -->
-        <embed src="PartialDifferentiation.pdf" type="application/pdf" class="pdf2-preview" />
-      
-        <!-- Actions -->
-        <div class="pdf2-actions">
-          <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-download"></i></button>
+
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-print"></i></button>
           <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
           </button>
         </div>
@@ -598,11 +575,13 @@
 
       <div class="pdf2-box">
         <!-- pdf2 Preview -->
-        <embed src="PartialDifferentiation.pdf" type="application/pdf" class="pdf2-preview" />
+        <embed src="t3.pdf#toolbar=0" type="application/pdf" style="background-color: #2980b9; color: blue; " class="pdf2-preview" />
       
         <!-- Actions -->
         <div class="pdf2-actions">
-          <!-- <a href="PartialDifferentiation.pdf" class="action-btn download" download>Download</a> -->
+          <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-download"></i></button>
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-print"></i></button>
           <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
           </button>
         </div>
@@ -610,17 +589,31 @@
 
       <div class="pdf2-box">
         <!-- pdf2 Preview -->
-        <embed src="PartialDifferentiation.pdf" type="application/pdf" class="pdf2-preview" />
+        <embed src="t4.pdf#toolbar=0" type="application/pdf" style="background-color: #2980b9; color: blue; " class="pdf2-preview" />
       
         <!-- Actions -->
         <div class="pdf2-actions">
           <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-download"></i></button>
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-print"></i></button>
           <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
           </button>
         </div>
       </div>
 
-    </div>
+      <div class="pdf2-box">
+        <!-- pdf2 Preview -->
+        <embed src="t5.pdf#toolbar=0" type="application/pdf" style="background-color: #2980b9; color: blue; " class="pdf2-preview" />
+      
+        <!-- Actions -->
+        <div class="pdf2-actions">
+          <!-- <a href="PartialDifferentiation.pdf2" class="action-btn download" download>Download</a> -->
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-download"></i></button>
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-print"></i></button>
+          <button class="action-btn delete" onclick="deletepdf2()"><i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div> 
   </div>
 
   <div class="bot-icon">
@@ -628,8 +621,9 @@
 
     <div class="chatbot-container hidden" id="chatbot-temp">
       <div class="chat-header" style="display: flex; justify-content: end;">
-        <h3 style="width: 60%; align-items: end; text-align: end;">Chatbot</h3>
-        <button style="width: 40%; align-items: end; text-align: end; background: none; border: none;" id="cancel-bot"><img style="height : 30px ;width: 30px;" src="cross2.jpg" alt="cancel-btn"></button>
+        <h3 style="width: 60%; align-items: end; text-align: end;">Chatbot</h3> 
+
+        <button style="width: 40%; align-items: end; text-align: end; background: none; border: none; cursor: pointer; font-size: x-large; font-weight: bold; color: #333f44;" id="cancel-bot">x</button>
       </div>
       <div class="chat-body" id="chat-body">
         <div class="message bot-message">
@@ -661,7 +655,7 @@
         // Add bot reply
         const botMessageElement = document.createElement('div');
         botMessageElement.classList.add('message', 'bot-message');
-        botMessageElement.textContent = "I'm just a simple bot. :)";
+        botMessageElement.textContent = "Thank you for your interest We're working hard to bring these feature to you soon";
         chatBody.appendChild(botMessageElement);
 
         // Clear input
